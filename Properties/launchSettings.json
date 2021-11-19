@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ProcessKiller": {
+      "commandName": "Project",
+      "commandLineArgs": "notepad 5 1"
+    }
+  }
+}
