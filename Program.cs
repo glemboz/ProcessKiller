@@ -10,13 +10,33 @@ namespace ProcessKiller
 
         static void Main(string[] args)
         {
-            string processName = args[0];
             //минутка defensive programming
+            if (args.Length == 0)
+            {
+                Console.WriteLine("Неправильно введены параметры для запуска программы!");
+                ShowErrorAndExit();
+            }
             if (!int.TryParse(args[1], out int timeToLive))
+            {
+                Console.WriteLine("Введите число!");
                 ShowErrorAndExit();
+            }
+            if (timeToLive <= 0)
+            {
+                Console.WriteLine("Введите число больше нуля!");
+                ShowErrorAndExit();
+            }
             if (!int.TryParse(args[2], out int checkFrequency))
+            {
+                Console.WriteLine("Введите число!");
                 ShowErrorAndExit();
-
+            }
+            if (checkFrequency <= 0)
+            {
+                Console.WriteLine("Введите число больше нуля!");
+                ShowErrorAndExit();
+            }
+            string processName = args[0];
             Dictionary<int, int> ProcessIdsWithTtl = new(); //словарь <PID процесса, количество пройденных проверок>
 
             SetTimerForProcess(checkFrequency, timeToLive, processName, ProcessIdsWithTtl);
@@ -44,7 +64,7 @@ namespace ProcessKiller
                     if (ProcessIdsWithTtl.ContainsKey(process.Id))
                         ProcessIdsWithTtl[process.Id] += 1;
                     else
-                    {                    
+                    {
                         Console.WriteLine($"Новый {processName} найден! PID={process.Id}");
                         ProcessIdsWithTtl.Add(process.Id, 0); //значение 0, когда процесс только что найден
                     }
@@ -72,11 +92,9 @@ namespace ProcessKiller
                 }
             }
         }
-
         private static void ShowErrorAndExit()
         {
-            aTimer.Stop();
-            Console.WriteLine("Вводите параметры в правильном формате! (Название процесса, допустимое время жизни (в минутах) и частота проверки (в минутах))\nНажмите ENTER для выхода");
+            Console.WriteLine("Нажмите Enter для выхода");
             Console.ReadLine();
             Environment.Exit(0);
         }
